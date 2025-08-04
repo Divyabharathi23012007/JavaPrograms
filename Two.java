@@ -1,5 +1,5 @@
 package examples;
-
+//single inheritance
 class One {
     int a=3;
 }
@@ -9,4 +9,5 @@ public class Two extends One{
 		Two o= new Two();
 		System.out.println(o.a * o.b);
 	}
+
 }
