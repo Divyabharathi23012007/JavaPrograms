@@ -1,6 +1,6 @@
 import java.util.*;
 
-public class Add {
+public class Sub {
     public static void main(String[] args) {
         Scanner sc = new Scanner(System.in);
 
@@ -20,7 +20,7 @@ public class Add {
 
         for (int i = 0; i < 3; i++)
             for (int j = 0; j < 3; j++)
-                e[i][j] = a[i][j] + b[i][j];
+                e[i][j] = a[i][j] - b[i][j];
 
         System.out.println("Resultant :");
         for (int i = 0; i < 3; i++) {
