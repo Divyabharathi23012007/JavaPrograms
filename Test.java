@@ -17,6 +17,7 @@ class rec extends rit{
 public class Test{
 	public static void main(String[] args){
         rit o=new rit();
+        
             o.disp();
         rit o1=new rec();
             o1.disp();
