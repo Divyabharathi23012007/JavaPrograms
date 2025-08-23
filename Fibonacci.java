@@ -21,6 +21,10 @@ public class Fibonacci {
 		System.out.print("Enter a number: ");
 		int n=sc.nextInt();
 		Fibonacci o=new Fibonacci();
+
+		if(n<=0) {
+			System.out.println("Enter a valid positive integer.");
+		}
 		
 		//looping from 0 to n and print each fib(i)
 		for (int i=0;i<n;i++) {
@@ -36,3 +40,4 @@ public class Fibonacci {
 	}
 
 }
+
