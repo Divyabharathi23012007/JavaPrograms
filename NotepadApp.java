@@ -36,6 +36,7 @@ public class NotepadApp extends JFrame implements ActionListener {
         fileMenu.add(openFile);
         fileMenu.add(saveFile);
         fileMenu.add(exit);
+        
 
         // Edit Menu
         JMenu editMenu = new JMenu("Edit");
@@ -61,7 +62,7 @@ public class NotepadApp extends JFrame implements ActionListener {
 
     public void actionPerformed(ActionEvent e) {
         String command = e.getActionCommand();
-
+ 
         switch (command) {
             case "New":
                 textArea.setText("");

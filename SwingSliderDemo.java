@@ -12,5 +12,7 @@ public class SwingSliderDemo extends Application {
         s.setScene(new Scene(new StackPane(sn),200,100));
         s.show();
     }
-    public static void main(String[] a){launch(a);}
-}
+    public static void main(String[] args){
+    	launch(args);  
+    }
+} 
