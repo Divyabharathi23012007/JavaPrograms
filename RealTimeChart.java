@@ -1,78 +1,97 @@
 //Name: Divya Bharathi  I 
 //Reg no: 2117240020096
+//Real time chart in JavaFx
 
 
 import javafx.application.Application;
+import javafx.application.Platform;
 import javafx.scene.Scene;
 import javafx.scene.chart.LineChart;
 import javafx.scene.chart.NumberAxis;
 import javafx.scene.chart.XYChart;
+import javafx.scene.control.Button;
+import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 import javafx.animation.KeyFrame;
 import javafx.animation.Timeline;
 import javafx.util.Duration;
 
-import java.io.BufferedReader;
-import java.io.InputStreamReader;
-import java.net.HttpURLConnection;
-import java.net.URL;
-import org.json.JSONObject;
+import java.util.Random;
 
 public class RealTimeChart extends Application {
 
-    private XYChart.Series<Number, Number> series = new XYChart.Series<>();
-    private int timeCounter = 0;
+    private Timeline timeline;
+    private int xValue = 0;
+    private Random random = new Random();
 
     @Override
     public void start(Stage stage) {
-        stage.setTitle("Real-Time Weather Data - Kanchipuram");
 
+        // Axes
         NumberAxis xAxis = new NumberAxis();
-        xAxis.setLabel("Time (s)");
+        xAxis.setLabel("Time (seconds)");
 
         NumberAxis yAxis = new NumberAxis();
-        yAxis.setLabel("Temperature (°C)");
+        yAxis.setLabel("Data Value");
 
+        // Create LineChart
         LineChart<Number, Number> lineChart = new LineChart<>(xAxis, yAxis);
-        lineChart.setTitle("Live Temperature Updates");
-        series.setName("Temperature");
+        lineChart.setTitle("Real-Time Data Visualization");
+
+        // Series for dynamic data
+        XYChart.Series<Number, Number> series = new XYChart.Series<>();
+        series.setName("Live Data");
         lineChart.getData().add(series);
 
-        Timeline timeline = new Timeline(new KeyFrame(Duration.seconds(10), e -> {
-            double temp = fetchTemperature();
-            series.getData().add(new XYChart.Data<>(timeCounter, temp));
-            timeCounter += 10;
-        }));
-        timeline.setCycleCount(Timeline.INDEFINITE);
-        timeline.play();
+        // Start Button
+        Button startBtn = new Button("Start Updates");
+        startBtn.setOnAction(e -> startUpdates(series));
 
-        Scene scene = new Scene(lineChart, 800, 600);
+        // Stop Button
+        Button stopBtn = new Button("Stop Updates");
+        stopBtn.setOnAction(e -> stopUpdates());
+
+        // Arrange UI
+        VBox root = new VBox(10, lineChart, startBtn, stopBtn);
+        Scene scene = new Scene(root, 800, 500);
+
+        stage.setTitle("Real-Time Chart in JavaFX");
         stage.setScene(scene);
         stage.show();
     }
 
-    private double fetchTemperature() {
-        try {
-            String apiKey = "7dab5febadff449781d82955252906"; // Replace with your actual key
-            String urlString = "https://api.weatherapi.com/v1/current.json?key=" + apiKey + "&q=Kanchipuram";
-            URL url = new URL(urlString);
-            HttpURLConnection conn = (HttpURLConnection) url.openConnection();
-            conn.setRequestMethod("GET");
+    private void startUpdates(XYChart.Series<Number, Number> series) {
+        if (timeline != null && timeline.getStatus() == Timeline.Status.RUNNING) return;
 
-            BufferedReader reader = new BufferedReader(new InputStreamReader(conn.getInputStream()));
-            StringBuilder json = new StringBuilder();
-            String line;
-            while ((line = reader.readLine()) != null) {
-                json.append(line);
+        timeline = new Timeline(new KeyFrame(Duration.seconds(1), event -> {
+
+            try {
+                // Simulate real numeric data
+                int yValue = random.nextInt(200) - 50; // -50 to 150 (Out of range case)
+
+                // Handle non-numeric input simulation
+                if (random.nextInt(20) == 0) throw new NumberFormatException("Invalid data!");
+
+                series.getData().add(new XYChart.Data<>(xValue++, yValue));
+
+                // Auto-remove oldest values to avoid memory growth
+                if (series.getData().size() > 30) {
+                    series.getData().remove(0);
+                }
+
+            } catch (Exception ex) {
+                System.out.println("Handled invalid input: " + ex.getMessage());
             }
-            reader.close();
 
-            JSONObject obj = new JSONObject(json.toString());
-            return obj.getJSONObject("current").getDouble("temp_c");
+        }));
 
-        } catch (Exception e) {
-            System.out.println("Error fetching temperature: " + e.getMessage());
-            return 0.0; // fallback value
+        timeline.setCycleCount(Timeline.INDEFINITE);
+        timeline.play();
+    }
+
+    private void stopUpdates() {
+        if (timeline != null) {
+            timeline.stop();
         }
     }
 
@@ -80,3 +99,4 @@ public class RealTimeChart extends Application {
         launch(args);
     }
 }
+
